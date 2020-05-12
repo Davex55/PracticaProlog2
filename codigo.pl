@@ -1,3 +1,4 @@
+:- module(Module, PublicList).
 %Nuestros datos
 alumno_prode('Benavente','Alvarez','Alejandro',160319). %PORTAVOZ
 alumno_prode('Doncel','Aparicio','Alberto',160364).   
@@ -14,29 +15,29 @@ eliminar_comodines(Regs, R, L):-
 recorrerLista(Regs, [_], _, N ,N) :-
     arg(N, Regs, X1),
     comprobar_comodin(X1, B),
-    B = c(),
+    B = comodin,
     !.
 recorrerLista(Regs, [X1],[X1], N ,N) :-
     arg(N, Regs, X1),
     comprobar_comodin(X1, B),
-    B \= c(),
+    B \= comodin,
     !.
 recorrerLista(Regs, [_|R],L, N1, N):-
 	arg(N1, Regs, X1),
     N2 is N1 + 1,
     comprobar_comodin(X1, B),
-    B = c(),
+    B = comodin,
     recorrerLista(Regs, R, L,N2, N).
 recorrerLista(Regs, [X1|R], [X1|L], N1, N):-
 	arg(N1, Regs, X1),
     N2 is N1 + 1,
     comprobar_comodin(X1, B),
-    B \= c(), 
+    B \= comodin, 
     recorrerLista(Regs, R, L, N2, N).
 
 comprobar_comodin(A,B) :-
       A == *,
-      B = c(),
+      B = comodin,
       !.
   
 comprobar_comodin(A,A). 
