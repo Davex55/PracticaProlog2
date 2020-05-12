@@ -1,4 +1,4 @@
-:- module(Module, PublicList).
+%:- module(Module, PublicList).
 
 %Nuestros datos
 alumno_prode('Benavente','Alvarez','Alejandro',160319). %PORTAVOZ
@@ -42,8 +42,10 @@ comprobar_comodin(A,B) :-
   
 comprobar_comodin(A,A). 
 
+%ejecutar_instrucciones/3 (Registros, Instruccion, Resultado)
+%predicado que devuelve true si Resultado es Registros tras haberse modificado por una Instruccion
 ejecutar_instruccion(Regs,Ins,ES):-
-    ground(Regs),
+    ground(Regs),           %comprobamos que tanto Regs como Ins son variables inicializadas
     ground(Ins),
     Ins =.. [I,A,B],
     Regs =.. [R|L1],
@@ -51,9 +53,9 @@ ejecutar_instruccion(Regs,Ins,ES):-
     functor(Regs, _, N),
     A =< N,
     B =< N,
-    P1 is A-1,
+    P1 is A-1,              %restamos uno debido a que en nuestra implementación de swap las lista empiezan en 0
     P2 is B-1,
-    swap(L1, P1, P2, S),
+    swap(L1, P1, P2, S),    %hacemos swap con las listas no con registros
     ES =.. [R|S].
 
 ejecutar_instruccion(Regs,Ins,ES):-
@@ -64,32 +66,35 @@ ejecutar_instruccion(Regs,Ins,ES):-
     I == move,
     move(L1, N1, N2, ES),
     ES =.. [R|ES].
-    
-swap( L, On, With, L ) :-
-    On = With.
-swap( L, On, With, S ) :-   
-    swap2( L, On, With, S, _, _ ).
-swap( L, On, With, S ) :-
-    swap2( L, With, On, S, _, _ ).
 
-swap2( L, _, 0, S, E_on, E_with ) :-
-    L = [E_with|Ls],
-    S = [E_on|Ls],
+%swap/4 (ListaInicial, Posicion1, Posicion2,ListaResultante)
+%predicado que devuelve true si ListaResultante es ListaInicial pero con los 
+%elementos en Posicion1 y Posicion2 cambiados de lugar
+swap( L, P1, P2, L ) :-         %caso en el que Posicion1 y Posicion2 son el mismo número
+    P1 = P2.
+swap( L, P1, P2, S ) :-         %hacemos estos dos predicados para aceptar tanto swap(1,2) como swap(2,1)    
+    swap2( L, P1, P2, S, _, _ ).
+swap( L, P1, P2, S ) :-
+    swap2( L, P2, P1, S, _, _ ).
+
+swap2( L, _, 0, S, E_P1, E_P2 ) :-  %caso en el que llegamos a P2=0 y realizamos el cambio de números
+    L = [E_P2|Ls],
+    S = [E_P1|Ls],
     !.
-swap2( L, On, With, S, E_on, E_with ) :-
-    On = 0,
-    L = [E_on|Es],
-    S = [E_with|Rs],
-    N1 is On - 1,
-    N2 is With - 1,
-    swap2( Es, N1, N2, Rs, E_on, E_with ),
+swap2( L, P1, P2, S, E_P1, E_P2 ) :-%caso en el que llegamos a P1=0 y guardamos el estado de los numeros que estaban en las posiciones correspondientes
+    P1 = 0,
+    L = [E_P1|Es],
+    S = [E_P2|Rs],
+    N1 is P1 - 1,
+    N2 is P2 - 1,
+    swap2( Es, N1, N2, Rs, E_P1, E_P2 ),
     !.
-swap2( L, On, With, S, E_on, E_with ) :-
+swap2( L, P1, P2, S, E_P1, E_P2 ) :-%recorremos la lista
     L = [E|Es],
     S = [E|Rs],
-    N1 is On - 1,
-    N2 is With - 1,
-    swap2( Es, N1, N2, Rs, E_on, E_with ).
+    N1 is P1 - 1,
+    N2 is P2 - 1,
+    swap2( Es, N1, N2, Rs, E_P1, E_P2 ).
 
 %swap([P1,P2],Regs,ES):-
 %    Regs =.. [R|L1],
