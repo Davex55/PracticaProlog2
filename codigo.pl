@@ -69,14 +69,14 @@ ejecutar_instruccion(Regs,Ins,ES):- %caso swap
     ES =.. [R|S].
 
 ejecutar_instruccion(Regs,Ins,ES):-
-    ground(Regs),
+    ground(Regs),           %comprobamos que tanto Regs como Ins son variables inicializadas
     ground(Ins),
     Ins =.. [I,N],
     Regs =.. [R|L1],
     I == move,
-    functor(Regs, _, M),    %comprobamos que los número del swap no sobrepasen los límites de los registros
+    functor(Regs, _, M),    %comprobamos que los número del move no sobrepasen los límites de los registros
     N =< M,
-    move(L1, N, 0, ES, M),
+    move(L1, N, 0, ES, M),  %hacemos move con las listas no con registros
     ES =.. [R|ES].
 
 %swap/4 (ListaInicial, Posicion1, Posicion2,ListaResultante)
