@@ -46,17 +46,20 @@ ejecutar_instruccion(Regs,Ins,ES):-
     Ins =.. [I,A,B],
     Regs =.. [R|L1],
     I == swap,
+    functor(Regs, _, N),
+    A =< N,
+    B =< N,
     P1 is A-1,
     P2 is B-1,
     swap(L1, P1, P2, S),
     ES =.. [R|S].
 
-%ejecutar_instruccion(Regs,Ins,ES):-
-%    Ins =.. [I,N1,N2],
-%    Regs =.. [R|L1],
-%    I == move,
-%    move(L1, N1, N2, ES),
-%    ES =.. [I].
+ejecutar_instruccion(Regs,Ins,ES):-
+    Ins =.. [I,N1,N2],
+    Regs =.. [R|L1],
+    I == move,
+    move(L1, N1, N2, ES),
+    ES =.. [I].
     
 swap( L, On, With, L ) :-
     On = With.
@@ -95,8 +98,7 @@ swap2( L, On, With, S, E_on, E_with ) :-
 %    N \= P1,
 %    N \= P2,
 
-
-%move(_,_,_,_).
+move(_,_,_,_).
 
 %eliminar_comodines(Regs, R, L):-
 %    Regs =.. A,
