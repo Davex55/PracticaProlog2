@@ -1,4 +1,4 @@
-:- module(Module, PublicList).
+%:- module(Module, PublicList).
 %Nuestros datos
 alumno_prode('Benavente','Alvarez','Alejandro',160319). %PORTAVOZ
 alumno_prode('Doncel','Aparicio','Alberto',160364).   
@@ -41,6 +41,64 @@ comprobar_comodin(A,B) :-
       !.
   
 comprobar_comodin(A,A). 
+
+ejecutar_instruccion(Regs,Ins,ES):-
+    Ins =.. [I,A,B],
+    Regs =.. [R|L1],
+    I == swap,
+    P1 is A-1,
+    P2 is B-1,
+    swap(L1, P1, P2, S),
+    ES =.. [I|S].
+
+ejecutar_instruccion(Regs,Ins,ES):-
+    Ins =.. [I,N1,N2],
+    Regs =.. [R|L1],
+    I == move,
+    move(L1, N1, N2, ES),
+    ES =.. [I].
+    
+swap( Lst, On, With, Lst ) :-
+    On = With.
+swap( Lst, On, With, Res ) :-
+
+    swap( Lst, On, With, Res, E_on, E_with ).
+swap( Lst, On, With, Res ) :-
+
+    swap( Lst, With, On, Res, E_on, E_with ).
+swap( Lst, On, With, Res, E_on, E_with ) :-
+    With = 0,
+    Lst = [E_with|Ls],
+    Res = [E_on|Ls],
+    !.
+swap( Lst, On, With, Res, E_on, E_with ) :-
+    On = 0,
+    Lst = [E_on|Es],
+    Res = [E_with|Rs],
+    N1 is On - 1,
+    N2 is With - 1,
+    swap( Es, N1, N2, Rs, E_on, E_with ),
+    !.
+swap( Lst, On, With, Res, E_on, E_with ) :-
+    Lst = [E|Es],
+    Res = [E|Rs],
+    N1 is On - 1,
+    N2 is With - 1,
+    swap( Es, N1, N2, Rs, E_on, E_with ).
+
+%swap([P1,P2],Regs,ES):-
+%    Regs =.. [R|L1],
+%    arg(P1,Regs,X1),
+%    arg(P2,Regs,X2),
+%    copy_swap(L1,[P1,P2],L2,1),
+%    ES =.. [R|L2].
+
+%copy_swap([X|L1],[P1,P2],[Y|L2],N):-
+%    N \= P1,
+%    N \= P2,
+
+
+move(_,_,_).
 
 %eliminar_comodines(Regs, R, L):-
 %    Regs =.. A,
