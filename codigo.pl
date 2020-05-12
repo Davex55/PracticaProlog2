@@ -1,4 +1,5 @@
-%:- module(Module, PublicList).
+:- module(Module, PublicList).
+
 %Nuestros datos
 alumno_prode('Benavente','Alvarez','Alejandro',160319). %PORTAVOZ
 alumno_prode('Doncel','Aparicio','Alberto',160364).   
@@ -7,9 +8,8 @@ alumno_prode('Lin','Tsai','Alvin',160267).
 
 eliminar_comodines(Regs, R, L):-
     functor(Regs, _, N),
-    %Regs =.. A,
-    %length(R, N),
-	recorrerLista(Regs, R, L, 1, N).
+    recorrerLista(Regs, R1, L, 1, N),
+    R =.. [regs|R1].
 
 %recorrerLista(_, _, 0 , _).
 recorrerLista(Regs, [_], [], N ,N) :-
