@@ -1,4 +1,4 @@
-:- module(Module, PublicList).
+%:- module(Module, PublicList).
 
 %Nuestros datos
 alumno_prode('Benavente','Alvarez','Alejandro',160319). %PORTAVOZ
@@ -84,7 +84,7 @@ ejecutar_instruccion(Regs,Ins,ES):-
 %elementos en Posicion1 y Posicion2 cambiados de lugar
 swap( L, P1, P2, L ) :-         %caso en el que Posicion1 y Posicion2 son el mismo número
     P1 = P2.
-swap( L, P1, P2, S ) :-         %hacemos estos dos predicados para aceptar tanto swap(1,2) como swap(2,1)    
+swap( L, P1, P2, S ) :-           
     swap2( L, P1, P2, S, _, _ ).
 swap( L, P1, P2, S ) :-
     swap2( L, P2, P1, S, _, _ ).
