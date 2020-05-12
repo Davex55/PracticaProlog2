@@ -43,6 +43,8 @@ comprobar_comodin(A,B) :-
 comprobar_comodin(A,A). 
 
 ejecutar_instruccion(Regs,Ins,ES):-
+    ground(Regs),
+    ground(Ins),
     Ins =.. [I,A,B],
     Regs =.. [R|L1],
     I == swap,
@@ -55,11 +57,13 @@ ejecutar_instruccion(Regs,Ins,ES):-
     ES =.. [R|S].
 
 ejecutar_instruccion(Regs,Ins,ES):-
+    ground(Regs),
+    ground(Ins),
     Ins =.. [I,N1,N2],
     Regs =.. [R|L1],
     I == move,
     move(L1, N1, N2, ES),
-    ES =.. [I].
+    ES =.. [R|ES].
     
 swap( L, On, With, L ) :-
     On = With.
