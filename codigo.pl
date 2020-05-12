@@ -1,4 +1,4 @@
-%:- module(Module, PublicList).
+:- module(Module, PublicList).
 
 %Nuestros datos
 alumno_prode('Benavente','Alvarez','Alejandro',160319). %PORTAVOZ
