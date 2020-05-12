@@ -1,9 +1,9 @@
-:- module(Module, PublicList).
+:- module(_, _).
 
 %Nuestros datos
-alumno_prode('Benavente','Alvarez','Alejandro',160319). %PORTAVOZ
-alumno_prode('Doncel','Aparicio','Alberto',160364).   
-alumno_prode('Lin','Tsai','Alvin',160267).
+alumno_prode('Benavente','Alvarez','Alejandro','Y160319'). %PORTAVOZ
+alumno_prode('Doncel','Aparicio','Alberto','Y160364').   
+alumno_prode('Lin','Tsai','Alvin','Y160267').
 %-------------------------------------------
 
 %eliminar_comodines/3 (Registros, RegistrosSinComodines, ListaSimbolos)
