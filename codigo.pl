@@ -1,4 +1,4 @@
-%:- module(Module, PublicList).
+:- module(Module, PublicList).
 
 %Nuestros datos
 alumno_prode('Benavente','Alvarez','Alejandro',160319). %PORTAVOZ
@@ -44,13 +44,13 @@ comprobar_comodin(A,A).
 
 %ejecutar_instrucciones/3 (Registros, Instruccion, Resultado)
 %predicado que devuelve true si Resultado es Registros tras haberse modificado por una Instruccion
-ejecutar_instruccion(Regs,Ins,ES):-
+ejecutar_instruccion(Regs,Ins,ES):- %caso swap
     ground(Regs),           %comprobamos que tanto Regs como Ins son variables inicializadas
     ground(Ins),
     Ins =.. [I,A,B],
     Regs =.. [R|L1],
     I == swap,
-    functor(Regs, _, N),
+    functor(Regs, _, N),    %comprobamos que los número del swap no sobrepasen los límites de los registros 
     A =< N,
     B =< N,
     P1 is A-1,              %restamos uno debido a que en nuestra implementación de swap las lista empiezan en 0
@@ -61,10 +61,12 @@ ejecutar_instruccion(Regs,Ins,ES):-
 ejecutar_instruccion(Regs,Ins,ES):-
     ground(Regs),
     ground(Ins),
-    Ins =.. [I,N1,N2],
+    Ins =.. [I,N],
     Regs =.. [R|L1],
     I == move,
-    move(L1, N1, N2, ES),
+    functor(Regs, _, M),    %comprobamos que los número del swap no sobrepasen los límites de los registros
+    N =< M,
+    move(L1, N, 0, ES, M),
     ES =.. [R|ES].
 
 %swap/4 (ListaInicial, Posicion1, Posicion2,ListaResultante)
@@ -77,6 +79,9 @@ swap( L, P1, P2, S ) :-         %hacemos estos dos predicados para aceptar tanto
 swap( L, P1, P2, S ) :-
     swap2( L, P2, P1, S, _, _ ).
 
+%swap/6 ((ListaInicial, Posicion1, Posicion2,ListaResultante, EstadoP1, EstadoP2)
+%predicado homónimo a swap4 pero en el que guardamos los estados con lo que encontramos en P1 y P2 para
+%modificar la lista cuando llegamos a dichas posiciones
 swap2( L, _, 0, S, E_P1, E_P2 ) :-  %caso en el que llegamos a P2=0 y realizamos el cambio de números
     L = [E_P2|Ls],
     S = [E_P1|Ls],
@@ -96,36 +101,20 @@ swap2( L, P1, P2, S, E_P1, E_P2 ) :-%recorremos la lista
     N2 is P2 - 1,
     swap2( Es, N1, N2, Rs, E_P1, E_P2 ).
 
-%swap([P1,P2],Regs,ES):-
-%    Regs =.. [R|L1],
-%    arg(P1,Regs,X1),
-%    arg(P2,Regs,X2),
-%    copy_swap(L1,[P1,P2],L2,1),
-%    ES =.. [R|L2].
+%move/5(Lista, Numero a mover, contador, ListaResultante, TamañoLista)
+%predicado que es true si produce una operación de move(descrita en el enunciado de la práctica) del numero 
+%a mover introducido como argumento y generando como resultado ListaResultante que es Lista pero con la modificación
+%anteriormente descrita.
+%wip, no acabado
+move([E|L], N, N, ES, N):-
+    ES=[E|L],
+    !.
 
-%copy_swap([X|L1],[P1,P2],[Y|L2],N):-
-%    N \= P1,
-%    N \= P2,
+move([E|L], N, N, ES, _):-
+    ES=[E|L],
+    !.
 
-move(_,_,_,_).
-
-%eliminar_comodines(Regs, R, L):-
-%    Regs =.. A,
-%    eliminar_comodin(A, R, L).
-%
-%eliminar_comodin([],_,_).
-%
-%eliminar_comodin(A|B, R, L):-
-%    comprobar_comodin(A, R, L),
-%    eliminar_comodin(B, R, L).
-%
-%comprobar_comodin(A,R,L):-
-%    A =:= '*',
-%    B = _,
-%    R = R|B.
-%
-%comprobar_comodin(A,R,L):-
-%    A =\= '*',
-%    R = R|A,
-%    L = L|A.
+move([_|Ls], N, X, ES, M):-
+    Xs is X+1,
+    move(Ls, N, Xs, ES, M).
 
