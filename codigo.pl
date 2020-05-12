@@ -49,42 +49,40 @@ ejecutar_instruccion(Regs,Ins,ES):-
     P1 is A-1,
     P2 is B-1,
     swap(L1, P1, P2, S),
-    ES =.. [I|S].
+    ES =.. [R|S].
 
-ejecutar_instruccion(Regs,Ins,ES):-
-    Ins =.. [I,N1,N2],
-    Regs =.. [R|L1],
-    I == move,
-    move(L1, N1, N2, ES),
-    ES =.. [I].
+%ejecutar_instruccion(Regs,Ins,ES):-
+%    Ins =.. [I,N1,N2],
+%    Regs =.. [R|L1],
+%    I == move,
+%    move(L1, N1, N2, ES),
+%    ES =.. [I].
     
-swap( Lst, On, With, Lst ) :-
+swap( L, On, With, L ) :-
     On = With.
-swap( Lst, On, With, Res ) :-
+swap( L, On, With, S ) :-   
+    swap2( L, On, With, S, _, _ ).
+swap( L, On, With, S ) :-
+    swap2( L, With, On, S, _, _ ).
 
-    swap( Lst, On, With, Res, E_on, E_with ).
-swap( Lst, On, With, Res ) :-
-
-    swap( Lst, With, On, Res, E_on, E_with ).
-swap( Lst, On, With, Res, E_on, E_with ) :-
-    With = 0,
-    Lst = [E_with|Ls],
-    Res = [E_on|Ls],
+swap2( L, _, 0, S, E_on, E_with ) :-
+    L = [E_with|Ls],
+    S = [E_on|Ls],
     !.
-swap( Lst, On, With, Res, E_on, E_with ) :-
+swap2( L, On, With, S, E_on, E_with ) :-
     On = 0,
-    Lst = [E_on|Es],
-    Res = [E_with|Rs],
+    L = [E_on|Es],
+    S = [E_with|Rs],
     N1 is On - 1,
     N2 is With - 1,
-    swap( Es, N1, N2, Rs, E_on, E_with ),
+    swap2( Es, N1, N2, Rs, E_on, E_with ),
     !.
-swap( Lst, On, With, Res, E_on, E_with ) :-
-    Lst = [E|Es],
-    Res = [E|Rs],
+swap2( L, On, With, S, E_on, E_with ) :-
+    L = [E|Es],
+    S = [E|Rs],
     N1 is On - 1,
     N2 is With - 1,
-    swap( Es, N1, N2, Rs, E_on, E_with ).
+    swap2( Es, N1, N2, Rs, E_on, E_with ).
 
 %swap([P1,P2],Regs,ES):-
 %    Regs =.. [R|L1],
@@ -98,7 +96,7 @@ swap( Lst, On, With, Res, E_on, E_with ) :-
 %    N \= P2,
 
 
-move(_,_,_).
+%move(_,_,_,_).
 
 %eliminar_comodines(Regs, R, L):-
 %    Regs =.. A,
