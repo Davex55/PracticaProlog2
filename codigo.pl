@@ -6,40 +6,50 @@ alumno_prode('Doncel','Aparicio','Alberto',160364).
 alumno_prode('Lin','Tsai','Alvin',160267).
 %-------------------------------------------
 
+%eliminar_comodines/3 (Registros, RegistrosSinComodines, ListaSimbolos)
+% predicado que devielve yes si RegistrosSinComodines es una estructura de tipo  reg/n, que resulta de sustituir los comodines que aparecen en el argumento  Registros/n por variables
+%ListaSimbolos  es una lista que contiene todos los símbolos utilizados en el término Registros/n en el mismoorden en los que estos aparecen en los registros.
 eliminar_comodines(Regs, R, L):-
-    functor(Regs, _, N),
+    functor(Regs, _, N),                                       % calculamos la ariedad de Regs
     recorrerLista(Regs, R1, L, 1, N),
-    R =.. [regs|R1].
+    R =.. [regs|R1].                                            %pasamos R a lista para poder operar
 
-%recorrerLista(_, _, 0 , _).
+% recorrerLista/5 (Registros, RegistrosSinComodines, ListaSimbolos, contador, ariedadDeRegistros)
+% predicado auxiliar que devuelve en Registros sin comodines la lista de elementos cambiando los comodines por _
+%  ademas la devuelve ListaSimbolos el alfabeto utilizado por los registros
 recorrerLista(Regs, [_], [], N ,N) :-
     arg(N, Regs, X1),
     comprobar_comodin(X1, B),
-    B = comodin,
+    B = comodin,                                        % si B es comodin el valor de R en la posicion N es _
     !.
+
 recorrerLista(Regs, [X1],[X1], N ,N) :-
     arg(N, Regs, X1),
     comprobar_comodin(X1, B),
-    B \= comodin,
+    B \= comodin,                                       % si B no es comodin el valor de R en la posicion N es X1 y se añade X1 a L
     !.
+
 recorrerLista(Regs, [_|R],L, N1, N):-
 	arg(N1, Regs, X1),
     N2 is N1 + 1,
     comprobar_comodin(X1, B),
-    B = comodin,
+    B = comodin,                                        % si B es comodin el valor de R en la posicion N es _ 
     recorrerLista(Regs, R, L,N2, N).
+
 recorrerLista(Regs, [X1|R], [X1|L], N1, N):-
 	arg(N1, Regs, X1),
     N2 is N1 + 1,
     comprobar_comodin(X1, B),
-    B \= comodin, 
+    B \= comodin,                                       % si B no es comodin el valor de R en la posicion N1 es X1 y se añade X1 a L
     recorrerLista(Regs, R, L, N2, N).
 
+% devuelve en B comodin si A unifica con *
 comprobar_comodin(A,B) :-
-      A == *,
-      B = comodin,
-      !.
+    A == *,
+    B = comodin,
+    !.
   
+% devuelve A en caso de que no unifique 
 comprobar_comodin(A,A). 
 
 %ejecutar_instrucciones/3 (Registros, Instruccion, Resultado)
