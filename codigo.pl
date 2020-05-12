@@ -12,7 +12,7 @@ eliminar_comodines(Regs, R, L):-
 	recorrerLista(Regs, R, L, 1, N).
 
 %recorrerLista(_, _, 0 , _).
-recorrerLista(Regs, [_], _, N ,N) :-
+recorrerLista(Regs, [_], [], N ,N) :-
     arg(N, Regs, X1),
     comprobar_comodin(X1, B),
     B = comodin,
